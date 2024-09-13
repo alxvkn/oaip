@@ -1,5 +1,6 @@
 #include <climits>
 #include <exception>
+#include <iomanip>
 #include <iostream>
 
 template <typename T, unsigned M, unsigned N>
@@ -32,7 +33,15 @@ public:
         return (T&)buffer[N * (i-1) + (j-1)];
     }
 
-    Matrix<T, N, M> transpose() {
+    const T& operator[](unsigned i, unsigned j) const {
+        if (i < 1 or i > M or j < 1 or j > N) {
+            throw std::exception();
+        }
+        return (const T&)buffer[N * (i-1) + (j-1)];
+    }
+
+    
+    Matrix<T, N, M> transpose() const {
         Matrix<T, N, M> mat = Matrix<T, N, M>();
 
         for (unsigned i = 1; i <= M; i++) {
@@ -44,14 +53,65 @@ public:
         return mat;
     }
 
-    friend std::ostream& operator<< (std::ostream& out, const Matrix<T, M, N>& mat) {
-        // out << "T: " << typeid(T).name() << ", M: " << M << ", N: " << N << std::endl;
-        for (unsigned i = 0; i < M; i++) {
-            out << (i == 0 ? "( " : "  ");
-            for (unsigned j = 0; j < N; j++) {
-                out << mat.buffer[N * i + j] << " ";
+    Matrix<T, M, N> operator+(const Matrix<T, M, N>& b) const {
+        Matrix<T, M, N> mat;
+
+        for (unsigned i = 1; i <= M; i++) {
+            for (unsigned j = 1; j <= N; j++) {
+                mat[i, j] = (*this)[i, j] + b[i, j];
             }
-            out << (i == M - 1 ? ")" : "\n");
+        }
+
+        return mat;
+    }
+
+    Matrix<T, M, N> operator-(const Matrix<T, M, N>& b) const {
+        Matrix<T, M, N> mat;
+
+        for (unsigned i = 1; i <= M; i++) {
+            for (unsigned j = 1; j <= N; j++) {
+                mat[i, j] = (*this)[i, j] - b[i, j];
+            }
+        }
+
+        return mat;
+    }
+
+    Matrix<T, M, N> operator*(const T b) const {
+        Matrix<T, M, N> mat;
+
+        for (unsigned i = 1; i <= M; i++) {
+            for (unsigned j = 1; j <= N; j++) {
+                mat[i, j] = (*this)[i, j] * b;
+            }
+        }
+
+        return mat;
+    }
+
+    Matrix<T, M, N> operator/(const T b) const {
+        // if (b == 0) throw std::exception();
+
+        Matrix<T, M, N> mat;
+
+        for (unsigned i = 1; i <= M; i++) {
+            for (unsigned j = 1; j <= N; j++) {
+                mat[i, j] = (*this)[i, j] / b;
+            }
+        }
+
+        return mat;
+    }
+
+    friend std::ostream& operator<<(std::ostream& out, const Matrix<T, M, N>& mat) {
+        // out << "T: " << typeid(T).name() << ", M: " << M << ", N: " << N << std::endl;
+        for (unsigned i = 1; i <= M; i++) {
+            out << (i == 1 ? "( " : "  ");
+            for (unsigned j = 1; j <= N; j++) {
+                // TODO: smart padding
+                out << std::setw(3) << mat[i, j] << " ";
+            }
+            out << (i == M ? ")" : "\n");
         }
         return out;
     };
@@ -63,20 +123,33 @@ int main() {
         { 5, 4, 3, 2 },
         { 1, 2, 3, 4 },
     };
-    std::cout << mat << std::endl << std::endl;
+    std::cout << "mat:" << std::endl
+        << mat << std::endl;
     mat[1, 2] = 3.3;
-    std::cout << mat << std::endl;
+    std::cout << "mat:" << std::endl
+        << mat << std::endl;
+
+    const Matrix<double, 3, 4> decrement_mat {
+        { -1, -1, -1, -1 },
+        { -1, -1, -1, -1 },
+        { -1, -1, -1, -1 },
+    };
+    std::cout << "decrement_mat:" << std::endl
+        << decrement_mat << std::endl;
+
+    std::cout << "mat - decrement_mat:" << std::endl
+        << mat - decrement_mat << std::endl;
+
+    std::cout << "mat + decrement_mat:" << std::endl
+        << mat + decrement_mat << std::endl;
 
     try {
-        mat[0, 0] = 2;
+        mat[3, 3] = 2;
     } catch (std::exception e) {
         std::cout << "exception thrown when trying to set value at [0, 0]"
             << std::endl;
     }
     std::cout << mat << std::endl;
-
-    Matrix<int, 0, 0> zero_by_zero_mat;
-    std::cout << zero_by_zero_mat << std::endl;
 
     // Matrix<char, -1, 0> invalid_mat{};
     // std::cout << invalid_mat << std::endl;
@@ -89,7 +162,7 @@ int main() {
     std::cout << "row: " << std::endl
         << row << std::endl;
 
-    auto column = row.transpose();
+    const auto column = row.transpose();
     std::cout << "row.transpose(): " << std::endl
         << column << std::endl;
 
