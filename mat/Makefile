@@ -7,3 +7,6 @@ mat: mat.o
 
 run: mat
 	./mat
+
+clean:
+	rm mat.o mat
