@@ -14,3 +14,6 @@ exe: $(OBJS)
 
 %.o: %.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+clean:
+	rm -rf *.o *.pcm exe
