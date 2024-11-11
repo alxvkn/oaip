@@ -1,3 +1,4 @@
+#include <iostream>
 #include <exception>
 #include <sstream>
 #include <string>
@@ -6,6 +7,29 @@
 #include <filesystem>
 
 #include "GoofyFiles.hpp"
+
+GoofyFiles::GoofyFiles(const std::string& save_path) : save_path(save_path) {
+    std::ifstream in(save_path);
+
+    if (in.is_open()) {
+        std::string line;
+        while (std::getline(in, line)) {
+            created_files.push_back(line);
+        }
+    }
+
+    in.close();
+}
+
+GoofyFiles::~GoofyFiles() {
+    std::ofstream out(save_path);
+
+    for (auto f : created_files) {
+        out << f << "\n";
+    }
+
+    out.close();
+}
 
 bool GoofyFiles::create_file(const std::string& pathname, const std::string& content) {
     bool created = false;

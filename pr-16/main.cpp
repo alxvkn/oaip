@@ -1,11 +1,12 @@
 #include <exception>
 #include <iostream>
 #include <string>
+
 #include "GoofyFiles.hpp"
 
 int main (int argc, char *argv[]) {
     const char* ERROR = "Что-то пошло не так.";
-    GoofyFiles gf;
+    GoofyFiles gf(".goofy_files");
 
     int choice = -1;
 
