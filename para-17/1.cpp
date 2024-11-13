@@ -1,3 +1,4 @@
+#include <cmath>
 #include <iostream>
 #include <utility>
 
@@ -35,14 +36,14 @@ int main (int argc, char *argv[]) {
 
     // b_offset используется для того, чтобы переходить к следующему
     // элементу в исходном массиве **b**, не увеличивая индекс для
-    // массива-получателя **c**, в том случае, если встретится нулевой элемент.
+    // массива-получателя **c**, в том случае, если встретится отрицательный элемент.
     //
     // (реализуется сжатие)
     unsigned c_actual_length = 0;
     for (unsigned i = 0, b_offset = 0; i + b_offset < b_length;) {
         int element = b[i + b_offset];
-        if (element != 0) {
-            c[i] = element * element;
+        if (element > 0) {
+            c[i] = std::sqrt(element);
             i++;
             c_actual_length++;
         } else {
