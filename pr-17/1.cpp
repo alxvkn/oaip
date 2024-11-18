@@ -25,7 +25,7 @@ void inverse_bubble_sort(T* arr, size_t size) {
     for (unsigned i = 0; i < size - 1; i++) {
         for (unsigned j = 0; j < size - 1 - i; j++) {
             if (arr[j] < arr[j + 1]) {
-                std::swap(arr[j], arr[j + j]);
+                std::swap(arr[j], arr[j + 1]);
             }
         }
     }
