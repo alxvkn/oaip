@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <utility>
 
 struct Book {
     std::string name;
@@ -71,6 +72,27 @@ public:
         _delete_by_index(i);
     }
 
+    void sort_by_year() {
+        if (!head || !head->next) return;
+
+        bool swapped;
+        do {
+            swapped = false;
+            Book* b = head;
+            while (b && b->next) {
+                if (b->year > b->next->year) {
+                    std::swap(b->year, b->next->year);
+                    std::swap(b->name, b->next->name);
+                    std::swap(b->author, b->next->author);
+                    std::swap(b->pages, b->next->pages);
+                    std::swap(b->genre, b->next->genre);
+                    swapped = true;
+                }
+                b = b->next;
+            }
+        } while (swapped);
+    }
+
 private:
     void _print_book(const Book& b) {
         std::cout << "\"" << b.name << "\"" << ", " << b.author << ", " << b.year << ", " << b.pages << ", " << b.genre << std::endl;
@@ -122,8 +144,15 @@ int main() {
     l.print();
     l.delete_by_name("1984");
     std::cout << std::endl;
+    std::cout << "after deleting 1984" << std::endl;
     l.print();
 
     std::cout << std::endl;
+    std::cout << "print_by_author(\"Лев Толстой\")"<< std::endl;
     l.print_by_author("Лев Толстой");
+
+    std::cout << std::endl;
+    std::cout << "after sorting by year" << std::endl;
+    l.sort_by_year();
+    l.print();
 }
