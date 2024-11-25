@@ -18,9 +18,9 @@ public:
 };
 
 int main() {
-    Rectangle a(3, 2);
-    Rectangle b(5, 4);
-    Rectangle c(8, 1);
+    Rectangle<int> a(3, 2);
+    Rectangle<int> b(5, 4);
+    Rectangle<int> c(8, 1);
 
     std::cout << "a:\n"
         << "width: " << a.width << "\n"
