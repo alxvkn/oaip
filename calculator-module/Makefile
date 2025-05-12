@@ -7,7 +7,7 @@ SRCS := main.cpp
 OBJS := $(MODS:.cppm=.o) $(SRCS:.cpp=.o)
 
 exe: $(OBJS)
-	$(CXX) -o $@ $^
+	$(CXX) $(LDFLAGS) -o $@ $^
 
 %.o: %.cppm
 	$(CXX) $(CXXFLAGS) -fmodule-output -c $< -o $@
